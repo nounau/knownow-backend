@@ -1,0 +1,9 @@
+Flask
+gunicorn
+pymongo==3.11
+dynaconf
+flask_bcrypt
+flask_jwt_extended
+flask_pymongo
+python-dotenv
+dnspython

@@ -2,7 +2,7 @@ from app.factory.validation import Validator
 from app.factory.database import Database
 
 
-class Questions(object):
+class Answers(object):
     def __init__(self):
         self.validator = Validator()
         self.db = Database()
@@ -16,7 +16,7 @@ class Questions(object):
             "noOfReposts": "string",
             "tags": ["string"],
             "isRealTime": "bool",
-            "views": "int",
+            # "views": "string",
             "created": "datetime",
             "updated": "datetime",
         }

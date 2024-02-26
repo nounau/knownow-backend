@@ -25,7 +25,6 @@ def postQuestion():
         id = question_service.postQuestion(questionData)
         # id = mongo.db.questions.insert_one({'title':_title, 'uId':_uId, 'noOfReposts':_noOfReposts, 'isRealTime':_isRealTime, 
         #                            'createdTimeStamp':_createdTimeStamp, 'updatedTimeStamp':_updatedTimeStamp, 'tags':_tags})
-        
         return jsonify({'ok': True, 'message': 'Question created successfully!'}), 200
     
 @bp.route('/questions/<string:id>', methods=['GET'])

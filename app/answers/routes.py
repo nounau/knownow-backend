@@ -19,7 +19,7 @@ def postAnswer():
 
     if _questionId and _answer:
 
-        id = service.postAnswer(answer_info_array)
+        id = service.postAnswer(_json)
         # id = mongo.db.questions.insert_one({'title':_title, 'uId':_uId, 'noOfReposts':_noOfReposts, 'isRealTime':_isRealTime, 
         #                            'createdTimeStamp':_createdTimeStamp, 'updatedTimeStamp':_updatedTimeStamp, 'tags':_tags})
         

@@ -8,6 +8,7 @@ from flask_jwt_extended import create_access_token,get_jwt,get_jwt_identity, uns
 from hmac import compare_digest
 from app.users.service import UserService
 from app.utils.jwt_helper import jwt
+from flask_jwt_extended import current_user
 
 auth_service = AuthService()
 user_service = UserService()
@@ -23,7 +24,7 @@ def create_token(user):
 # identity when creating JWTs and converts it to a JSON serializable format.
 @jwt.user_identity_loader
 def user_identity_lookup(user):
-    return user.id
+    return user._id
 
 
 # Register a callback function that loads a user from your database whenever
@@ -33,37 +34,51 @@ def user_identity_lookup(user):
 @jwt.user_lookup_loader
 def user_lookup_callback(_jwt_header, jwt_data):
     identity = jwt_data["sub"]
-    return user_service.getUserById(id=identity)
+    return user_service.getUserById(user_id=identity)
 
-@bp.route('/login', methods=['POST'])
-def login():
-    email = request.json.get('email', None)
-    password = request.json.get('password', None)
+# @bp.route('/login', methods=['POST'])
+# def login():
+#     email = request.json.get('email', None)
+#     password = request.json.get('password', None)
 
-    user = authenticate(email, password)
-    # def check_password(self, password):
-    #     return compare_digest(password, "password")
+#     user = authenticate(email, password)
+#     # def check_password(self, password):
+#     #     return compare_digest(password, "password")
 
-    if not user:
-        return jsonify({'error': 'Invalid credentials'}), 401
+#     if not user:
+#         return jsonify({'error': 'Invalid credentials'}), 401
 
-    access_token = create_token(user)
-    return jsonify({'access_token': access_token}), 200
+#     access_token = create_token(user)
+#     return jsonify({'access_token': access_token}), 200
 
 
 @bp.route("/login", methods=["POST"])
 def login():
-    username = request.json.get("username", None)
+    username = request.json.get("userName", None)
     password = request.json.get("password", None)
-    user = user_service.getUserByUserName(username=username)
+    user = user_service.getUserByUserName(user_name=username)
     if not user or not user.check_password(password):
         return jsonify("Wrong username or password"), 401
 
     # You can use the additional_claims argument to either add
     # custom claims or override default claims in the JWT.
-    additional_claims = {"aud": "some_audience", "foo": "bar"}
-    access_token = create_access_token(username, additional_claims=additional_claims)
+    additional_claims = {"foo": "bar"}
+    access_token = create_access_token(user, additional_claims=additional_claims)
     return jsonify(access_token=access_token)
+
+
+@bp.route("/who_am_i", methods=["GET"])
+@jwt_required()
+def protected():
+    # We can now access our sqlalchemy User object via `current_user`.
+    return jsonify(
+        id=current_user._id,
+        full_name=current_user.name,
+        userName=current_user.userName,
+        email=current_user.email,
+        currentLocation= current_user.currentLocation
+    )
+
 
 @bp.route('/register', methods=['POST'])
 def register():
@@ -96,7 +111,7 @@ def register():
                            _startDate, _endDate, _companyName, _workExperience, _interests, _languages, _photo, 
                            _savedQuestions, _questionsAsked, _answersGiven, _rewards, _guestIpAddress, _lastActiveTimeStamp]
 
-    if _userName and _email and _password and request.method == "POST":
+    if _userName and _email and _password:
 
         # _hashed_password = generate_password_hash(_password)
 
@@ -106,11 +121,9 @@ def register():
         #                                'companyName':_companyName, 'workExperience':_workExperience, 'photo':_photo, 'guestIpAddress':_guestIpAddress, 'lastActiveTimeStamp':_lastActiveTimeStamp})
 
         return jsonify({'ok': True, 'message': 'User created successfully!'}), 200
-    else:
-        return not_found()
 
-@bp.route('/protected', methods=['GET'])
-@jwt_required()
-def protected():
-    current_user = get_jwt_identity()
-    return jsonify({'message': f'Hello, {current_user}!'}), 200
+# @bp.route('/protected', methods=['GET'])
+# @jwt_required()
+# def protected():
+#     current_user = get_jwt_identity()
+#     return jsonify({'message': f'Hello, {current_user}!'}), 200

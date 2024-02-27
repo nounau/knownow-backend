@@ -1,6 +1,6 @@
 from flask import Flask
-from flask_jwt_extended import JWTManager, 
-from utils.jwt_helper import jwt
+from flask_jwt_extended import JWTManager
+from app.utils.jwt_helper import jwt
 from config import Config
 
 def create_app(config_class=Config):
@@ -22,6 +22,12 @@ def create_app(config_class=Config):
 
     from app.answers import bp as answer_bp
     app.register_blueprint(answer_bp)
+
+    from app.authentication import bp as auth_bp
+    app.register_blueprint(auth_bp)
+
+
+
     jwt.init_app(app)
 
     return app

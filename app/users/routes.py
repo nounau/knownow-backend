@@ -11,12 +11,10 @@ user_service = UserService()
 def postUser():
     userData = request.get_json()
 
-    if request.method == "POST":
-
-        id = user_service.postUser(userData)
-        
-        return jsonify({'ok': True, 'message': 'User created successfully!', 'response': id}), 200
-    return jsonify({'ok': False, 'message': 'Something went wrong', 'response': ''}), 400
+    id = user_service.postUser(userData)
+    
+    return jsonify({'ok': True, 'message': 'User created successfully!', 'response': id}), 200
+    # return jsonify({'ok': False, 'message': 'Something went wrong', 'response': ''}), 400
     
 @bp.route('/users/<string:id>', methods=['GET'])
 def getUser(id):
@@ -25,27 +23,22 @@ def getUser(id):
         resp = user
         #json.loads(json_util.dumps(data))
         return jsonify({'ok': True, 'message': 'User Fetched!', 'response': resp}), 200
-    return jsonify({'ok': False, 'message': 'Something went wrong', 'response': ''}), 400
+    return jsonify({'ok': False, 'message': 'User not found', 'response': ''}), 400
     
 @bp.route('/users/', methods=['GET'])
 def getAllUsers():
     user = user_service.get_all()
-    if user:
-        resp = user
         #json.loads(json_util.dumps(data))
-        return jsonify({'ok': True, 'message': 'All Users Fetched!', 'response': resp}), 200
-    return jsonify({'ok': False, 'message': 'Something went wrong', 'response': ''}), 400
+    return jsonify({'ok': True, 'message': 'All Users Fetched!', 'response': user}), 200
+    # return jsonify({'ok': False, 'message': 'Something went wrong', 'response': ''}), 400
     
 @bp.route('/users/updateUser/<id>', methods=['PUT'])
 def editUser(id):
     
     userData = request.get_json()
 
-    if 'email' and 'password' not in userData:
-        
-        id = user_service.updateUser(id,userData)        
-        return jsonify({'ok': True, 'message': 'User updated successfully!', 'response': id}), 200
-    return jsonify({'ok': False, 'message': 'Something went wrong', 'response': ''}), 400
+    id = user_service.updateUser(id,userData)        
+    return jsonify({'ok': True, 'message': 'User updated successfully!', 'response': id}), 200
 
 @bp.route('/users/deleteUser/<id>', methods=['DELETE'])
 def deleteUser(id):
@@ -53,7 +46,7 @@ def deleteUser(id):
     dId = user_service.delete(id)  
     if(dId):
         return jsonify({'ok': True, 'message': 'User deleted successfully!', 'response': id}), 200
-    return jsonify({'ok': False, 'message': 'Something went wrong', 'response': ''}), 400
+    return jsonify({'ok': False, 'message': 'User not found', 'response': ''}), 400
 
 # @bp.route('/questions/savedby', methods=['POST'])
 # def savedBy():
@@ -71,15 +64,3 @@ def deleteUser(id):
 #     else:
 #         return jsonify({'ok': False, 'message': 'Something went wrong', 'response': ''}), 400
     
-
-@bp.errorhandler(404)
-def not_found(error=None):
-    message = {
-        'status':404,
-        'message':'Not Found custom' + request.url
-    }
-    resp = jsonify(message)
- 
-    resp.status_code = 404
- 
-    return resp

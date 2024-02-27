@@ -65,15 +65,3 @@ def editQuestion(id):
 #     else:
 #         return jsonify({'ok': False, 'message': 'Something went wrong', 'response': ''}), 400
     
-
-@bp.errorhandler(404)
-def not_found(error=None):
-    message = {
-        'status':404,
-        'message':'Not Found custom' + request.url
-    }
-    resp = jsonify(message)
- 
-    resp.status_code = 404
- 
-    return resp

@@ -6,6 +6,7 @@ from app.authentication import bp
 from app.authentication.service import AuthService
 from flask_jwt_extended import create_access_token,get_jwt,get_jwt_identity, unset_jwt_cookies, jwt_required, JWTManager
 from hmac import compare_digest
+from app.users.service import UserService
 from app.utils.jwt_helper import jwt
 
 auth_service = AuthService()
@@ -48,6 +49,21 @@ def login():
 
     access_token = create_token(user)
     return jsonify({'access_token': access_token}), 200
+
+
+@bp.route("/login", methods=["POST"])
+def login():
+    username = request.json.get("username", None)
+    password = request.json.get("password", None)
+    user = user_service.getUserByUserName(username=username)
+    if not user or not user.check_password(password):
+        return jsonify("Wrong username or password"), 401
+
+    # You can use the additional_claims argument to either add
+    # custom claims or override default claims in the JWT.
+    additional_claims = {"aud": "some_audience", "foo": "bar"}
+    access_token = create_access_token(username, additional_claims=additional_claims)
+    return jsonify(access_token=access_token)
 
 @bp.route('/register', methods=['POST'])
 def register():

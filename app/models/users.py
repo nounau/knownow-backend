@@ -1,5 +1,6 @@
 from app.factory.validation import Validator
 from app.factory.database import Database
+from hmac import compare_digest
 
 
 class Users(object):
@@ -69,6 +70,13 @@ class Users(object):
 
     def find_by_id(self, id):
         return self.db.find_by_id(id, self.collection_name)
+
+    # NOTE: In a real application make sure to properly hash and salt passwords
+    def check_password(self, password):
+        return compare_digest(password, "password")
+    
+    def find_by_username(self, username):
+        return self.db.find_one_by_fieldname("userName", username, self.collection_name)
 
     def update(self, id, user):
         self.validator.validate(user, self.fields, self.update_required_fields, self.update_optional_fields)

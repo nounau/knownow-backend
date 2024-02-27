@@ -11,6 +11,9 @@ class UserService:
     def getUserById(self, user_id):
         return self.users.find_by_id(user_id)
 
+    def getUserByUserName(self, user_name):
+        return self.users.find_by_username(user_name)
+
     def postUser(self, data):
         # Add validation logic here if needed
         return self.users.create(data)

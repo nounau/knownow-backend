@@ -51,6 +51,25 @@ class Database(object):
              found["_id"] = str(found["_id"])
 
         return found
+    
+    def find_one_by_fieldname(self, fieldname, fieldvalue, collection_name):
+        found = self.db[collection_name].find_one({fieldname: fieldvalue})
+        
+        if found is None:
+            return not found
+        
+        if "_id" in found:
+             found["_id"] = str(found["_id"])
+
+        return found
+
+    def find_many_by_fieldname(self, fieldname, fieldvalue, collection_name):
+        found = self.db[collection_name].find({fieldname: fieldvalue})
+        
+        if found is None:
+            return not found
+
+        return found
 
     def update(self, id, element, collection_name):
         criteria = {"_id": ObjectId(id)}

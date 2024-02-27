@@ -14,5 +14,10 @@ def create_app(config_class=Config):
     from app.questions import bp as question_bp
     app.register_blueprint(question_bp)
 
+    from app.users import bp as user_bp
+    app.register_blueprint(user_bp)
+
+    from app.answers import bp as answer_bp
+    app.register_blueprint(answer_bp)
 
     return app

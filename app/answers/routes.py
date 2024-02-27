@@ -1,7 +1,7 @@
 from json import dumps
 from flask import Blueprint, Flask, request, jsonify
 from datetime import datetime, timedelta, timezone
-from src.modules.answers.service.ans_service import ans_service
+from app.answers import service
 from bson import json_util
 from app.answers import bp
 
@@ -19,7 +19,7 @@ def postAnswer():
 
     if _questionId and _answer:
 
-        id = ans_service.postAnswer(answer_info_array)
+        id = service.postAnswer(answer_info_array)
         # id = mongo.db.questions.insert_one({'title':_title, 'uId':_uId, 'noOfReposts':_noOfReposts, 'isRealTime':_isRealTime, 
         #                            'createdTimeStamp':_createdTimeStamp, 'updatedTimeStamp':_updatedTimeStamp, 'tags':_tags})
         
@@ -29,7 +29,7 @@ def postAnswer():
 
 @bp.route('/getanswer/<id>', methods=['GET'])
 def getAnswer(id):
-    ans = ans_service.getAnswerById(id)
+    ans = service.getAnswerById(id)
     if ans:
         resp = json_util.dumps(ans)
         #json.loads(json_util.dumps(data))
@@ -54,7 +54,7 @@ def editAnswer(id):
 
     if _questionId and _answer and request.method == "POST":
 
-        id = ans_service.updateAnswer(answer_info_array)
+        id = service.updateAnswer(answer_info_array)
         # id = mongo.db.questions.insert_one({'title':_title, 'uId':_uId, 'noOfReposts':_noOfReposts, 'isRealTime':_isRealTime, 
         #                            'createdTimeStamp':_createdTimeStamp, 'updatedTimeStamp':_updatedTimeStamp, 'tags':_tags})
         

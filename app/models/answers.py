@@ -16,7 +16,7 @@ class Answers(object):
             "noOfReposts": "string",
             "tags": ["string"],
             "isRealTime": "bool",
-            # "views": "string",
+            "views": "string",
             "created": "datetime",
             "updated": "datetime",
         }

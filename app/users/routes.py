@@ -1,52 +1,58 @@
 from json import dumps
-from app.questions.service import QuestionService
+from app.users.service import UserService
 from flask import Blueprint, Flask, request, jsonify
 from datetime import datetime, timedelta, timezone
 from bson import json_util
-from app.questions import bp
+from app.users import bp
 
-question_service = QuestionService()
+user_service = UserService()
 
-@bp.route('/questions/postquestion', methods=['POST'])
-def postQuestion():
-    questionData = request.get_json()
-    _title = questionData['title']
+@bp.route('/users/postuser', methods=['POST'])
+def postUser():
+    userData = request.get_json()
 
-    if _title and request.method == "POST":
+    if request.method == "POST":
 
-        id = question_service.postQuestion(questionData)
+        id = user_service.postUser(userData)
         
-        return jsonify({'ok': True, 'message': 'Question created successfully!', 'response': id}), 200
+        return jsonify({'ok': True, 'message': 'User created successfully!', 'response': id}), 200
     return jsonify({'ok': False, 'message': 'Something went wrong', 'response': ''}), 400
     
-@bp.route('/questions/<string:id>', methods=['GET'])
-def getQuestion(id):
-    question = question_service.getQuestionById(id)
-    if question:
-        resp = question
+@bp.route('/users/<string:id>', methods=['GET'])
+def getUser(id):
+    user = user_service.getUserById(id)
+    if user:
+        resp = user
         #json.loads(json_util.dumps(data))
-        return jsonify({'ok': True, 'message': 'Question Fetched!', 'response': resp}), 200
+        return jsonify({'ok': True, 'message': 'User Fetched!', 'response': resp}), 200
     return jsonify({'ok': False, 'message': 'Something went wrong', 'response': ''}), 400
     
-@bp.route('/questions/', methods=['GET'])
-def getAllQuestions():
-    question = question_service.get_all()
-    if question:
-        resp = question
+@bp.route('/users/', methods=['GET'])
+def getAllUsers():
+    user = user_service.get_all()
+    if user:
+        resp = user
         #json.loads(json_util.dumps(data))
-        return jsonify({'ok': True, 'message': 'All Questions Fetched!', 'response': resp}), 200
+        return jsonify({'ok': True, 'message': 'All Users Fetched!', 'response': resp}), 200
     return jsonify({'ok': False, 'message': 'Something went wrong', 'response': ''}), 400
     
-@bp.route('/questions/<id>', methods=['PUT'])
-def editQuestion(id):
+@bp.route('/users/updateUser/<id>', methods=['PUT'])
+def editUser(id):
     
-    questionData = request.get_json()
-    _title = questionData['title']
+    userData = request.get_json()
 
-    if _title:
+    if 'email' and 'password' not in userData:
         
-        id = question_service.updateQuestion(id,questionData)        
-        return jsonify({'ok': True, 'message': 'Question updated successfully!', 'response': id}), 200
+        id = user_service.updateUser(id,userData)        
+        return jsonify({'ok': True, 'message': 'User updated successfully!', 'response': id}), 200
+    return jsonify({'ok': False, 'message': 'Something went wrong', 'response': ''}), 400
+
+@bp.route('/users/deleteUser/<id>', methods=['DELETE'])
+def deleteUser(id):
+    
+    dId = user_service.delete(id)  
+    if(dId):
+        return jsonify({'ok': True, 'message': 'User deleted successfully!', 'response': id}), 200
     return jsonify({'ok': False, 'message': 'Something went wrong', 'response': ''}), 400
 
 # @bp.route('/questions/savedby', methods=['POST'])

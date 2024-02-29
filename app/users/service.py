@@ -13,9 +13,14 @@ class UserService:
 
     def getUserByUserName(self, user_name):
         return self.users.find_by_username(user_name)
+    
+    def getUserByEmail(self, email):
+        return self.users.find_by_email(email)
 
     def postUser(self, data):
         # Add validation logic here if needed
+        if(self.getUserByEmail(data['email'])):
+            return None
         return self.users.create(data)
 
     def updateUser(self, user_id, data):

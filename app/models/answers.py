@@ -7,21 +7,18 @@ class Answers(object):
         self.validator = Validator()
         self.db = Database()
 
-        self.collection_name = 'questions'  # collection name
+        self.collection_name = 'answers'  # collection name
 
         self.fields = {
-            "title": "string",
-            # "savedBy": "string",
-            "description": "string",
-            "noOfReposts": "string",
-            "tags": ["string"],
-            "isRealTime": "bool",
-            "views": "string",
-            "created": "datetime",
-            "updated": "datetime",
+            "questionId" : "string",
+            "answer" : "string",
+            "userId" : "string",
+            "likes" : "int",
+            "comments" : ["string"],
+            "isQualifiedRealTime" : "bool"
         }
 
-        self.create_required_fields = ["title"]
+        self.create_required_fields = ["questionId","answer","userId"]
 
         # Fields optional for CREATE
         self.create_optional_fields = []
@@ -32,19 +29,19 @@ class Answers(object):
         # Fields optional for UPDATE
         self.update_optional_fields = []
 
-    def create(self, question):
+    def create(self, answer):
         # Validator will throw error if invalid
-        self.validator.validate(question, self.fields, self.create_required_fields, self.create_optional_fields)
-        res = self.db.insert(question, self.collection_name)
+        self.validator.validate(answer, self.fields, self.create_required_fields, self.create_optional_fields)
+        res = self.db.insert(answer, self.collection_name)
         return res
 
-    def find(self, question):  
-        return self.db.find(question, self.collection_name)
+    def find(self, answer):  
+        return self.db.find(answer, self.collection_name)
 
-    def findByAggregate(self, question): 
+    def findByAggregate(self, answer): 
         # Add logic to populate reference fields
         pipeline = [
-            {"$match": question},
+            {"$match": answer},
             {"$lookup": {"from": self.reference_fields["savedBy"]["collection"],
                          "localField": self.reference_fields["savedBy"]["localField"],
                          "foreignField": self.reference_fields["savedBy"]["foreignField"],
@@ -56,9 +53,9 @@ class Answers(object):
     def find_by_id(self, id):
         return self.db.find_by_id(id, self.collection_name)
 
-    def update(self, id, question):
-        self.validator.validate(question, self.fields, self.update_required_fields, self.update_optional_fields)
-        return self.db.update(id, question,self.collection_name)
+    def update(self, id, answer):
+        self.validator.validate(answer, self.fields, self.update_required_fields, self.update_optional_fields)
+        return self.db.update(id, answer,self.collection_name)
 
     def delete(self, id):
         return self.db.delete(id, self.collection_name)

@@ -79,6 +79,58 @@ class Database(object):
         updated = self.db[collection_name].update_one(criteria, set_obj)
         if updated.matched_count == 1:
             return self.find_by_id(str(id), collection_name, model_class)
+        
+    # for OTP, includes upsert
+    def update_by_email(self, email, OTP, exp_Time, status, collection_name):
+        criteria = {"email": email}
+        element = {
+            "OTP": OTP,
+            "exp_Time": exp_Time,
+            "status": status,
+            "updated": datetime.now()  # Update the 'updated' field
+        }
+        set_obj = {"$set": element}
+
+        # Try to update the document, if not found, insert a new one (upsert)
+        updated = self.db[collection_name].update_one(criteria, set_obj, upsert=True)
+
+        if updated.matched_count == 1:
+            return True
+        else:
+            return False
+
+    # for OTP, only update
+    def update_status_by_email(self, email, status, collection_name):
+        criteria = {"email": email}
+        element = {
+            "status": status,
+            "updated": datetime.now()  # Update the 'updated' field
+        }
+        set_obj = {"$set": element}
+
+        # Try to update the document
+        updated = self.db[collection_name].update_one(criteria, set_obj)
+
+        if updated.matched_count == 1:
+            return True
+        else:
+            return False
+
+    def update_otpVerified(self, email, otpVerified, collection_name):
+        criteria = {"email": email}
+        element = {
+            "otpVerified": otpVerified,
+            "updated": datetime.now()  # Update the 'updated' field
+        }
+        set_obj = {"$set": element}
+
+        # Try to update the document
+        updated = self.db[collection_name].update_one(criteria, set_obj)
+
+        if updated.matched_count == 1:
+            return True
+        else:
+            return False
 
     def delete(self, id, collection_name):
         deleted = self.db[collection_name].delete_one({"_id": ObjectId(id)})

@@ -26,6 +26,9 @@ def create_app(config_class=Config):
     from app.authentication import bp as auth_bp
     app.register_blueprint(auth_bp)
 
+    from app.mailTemplate import bp as mailTemplate_bp
+    app.register_blueprint(mailTemplate_bp)
+
 
 
     jwt.init_app(app)

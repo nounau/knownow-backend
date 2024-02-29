@@ -130,6 +130,12 @@ class Users(object):
         return self.password == password
     def find_by_username(self, username):
         return self.map_document_to_instance(self.db.find_one_by_fieldname("userName", username, self.collection_name))
+    
+    def find_by_email(self, email):
+        return self.map_document_to_instance(self.db.find_one_by_fieldname("email", email, self.collection_name))
+
+    def updateOtpVerifiedFlag(self, email_of_OTP, otpVerified):
+        return self.db.update_otpVerified(email_of_OTP, otpVerified, self.collection_name)
 
     def update(self, id, user):
         self.validator.validate(user, self.fields, self.update_required_fields, self.update_optional_fields)

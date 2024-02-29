@@ -8,21 +8,17 @@ from app.answers import bp
 @bp.route('/postanswer', methods=['POST'])
 def postAnswer():
     _json = request.json
-    _questionId = _json['questionId']
-    _answer = _json['answer']
-    _userId = _json['userId']
-    _likes = _json['likes']
-    _comments = _json['comments']
-    _createdTimeStamp = _json['createdTimeStamp']
-    _updatedTimeStamp = _json['updatedTimeStamp']
-    _isQualifiedRealTime = _json['isQualifiedRealTime']
+    # _questionId = _json['questionId']
+    # _answer = _json['answer']
+    # _userId = _json['userId']
+    # _likes = _json['likes']
+    # _comments = _json['comments']
+    # _createdTimeStamp = _json['createdTimeStamp']
+    # _updatedTimeStamp = _json['updatedTimeStamp']
+    # _isQualifiedRealTime = _json['isQualifiedRealTime']
 
-    if _questionId and _answer:
-
-        id = service.postAnswer(_json)
-        # id = mongo.db.questions.insert_one({'title':_title, 'uId':_uId, 'noOfReposts':_noOfReposts, 'isRealTime':_isRealTime, 
-        #                            'createdTimeStamp':_createdTimeStamp, 'updatedTimeStamp':_updatedTimeStamp, 'tags':_tags})
-        
+    id = service.postAnswer(_json)
+    if id:
         return jsonify({'ok': True, 'message': 'Answer posted successfully!'}), 200
     else:
         return not_found()

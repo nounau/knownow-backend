@@ -1,4 +1,8 @@
 from json import dumps
+import random
+from app.common.mailUtility import mailUtility
+from app.mailTemplate.routes import getMailTemplate
+from app.models.otp import Otp
 from app.users.service import UserService
 from flask import Blueprint, Flask, request, jsonify
 from datetime import datetime, timedelta, timezone
@@ -10,8 +14,29 @@ user_service = UserService()
 @bp.route('/users/postuser', methods=['POST'])
 def postUser():
     userData = request.get_json()
+    _json = request.json
+    _email = _json['email']
 
     id = user_service.postUser(userData)
+    if(id is None):
+        return jsonify({'ok': False, 'message': 'User already exists!', 'response': id}), 409
+
+    OTP = random.randint(100000,999999);
+
+    replacements = [];
+    replacements.append({"target": "OTP", "value": str(OTP)})
+    mailObj = getMailTemplate("NEW_USER", replacements)
+
+    # print(mailObj)
+    # mailObj.to = _email
+    mailUtility.sendMail(mailObj, _email)
+
+    #temp
+    exp_Time = None
+    # if(otp.get_otp(_email)):
+    #     otp.updateStatus(_email, "INACTIVE")
+    # else:
+    Otp().save_otp(_email, OTP, exp_Time, "ACTIVE")
     
     return jsonify({'ok': True, 'message': 'User created successfully!', 'response': id}), 200
     # return jsonify({'ok': False, 'message': 'Something went wrong', 'response': ''}), 400

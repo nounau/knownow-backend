@@ -1,9 +1,11 @@
 # services.py
 from app.models import questions
+from app.models import users
 
 
 class AuthService:
     questions = questions.Questions()
+    users = users.Users()
 
     def authenticate(self,email, password):
         user = {'email': "rohansharma996034@gmail.com", "password": "password"} # add logic to fetch password from database Here
@@ -26,3 +28,6 @@ class AuthService:
 
     def delete(self, question_id):
         return self.questions.delete(question_id)
+    
+    def updateOtpVerifiedFlag(self, email_of_OTP, otpVerified):
+        return self.users.updateOtpVerifiedFlag(email_of_OTP, otpVerified)

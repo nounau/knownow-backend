@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 import traceback
 from app.factory.validation import Validator
 from app.factory.database import Database
@@ -30,15 +31,22 @@ class Otp(object):
         # Fields optional for UPDATE
         self.update_optional_fields = []
 
-    def save_otp(self, email, OTP, exp_Time, status):
+    def save_otp(self, email, OTP):
         # Validator will throw error if invalid
         # self.validator.validate(otp, self.fields, self.create_required_fields, self.create_optional_fields)
-        res = self.db.update_by_email(email, OTP, exp_Time, status, self.collection_name)
+        criteria = {"email": email}
+        element = {
+            "OTP": OTP,
+            "exp_Time": datetime.now() + timedelta(minutes=5),
+            "updated": datetime.now()  # Update the 'updated' field
+        }
+        res = self.db.upsert_by_criteria(criteria, element, self.collection_name)
         return res
 
     def get_otp(self, email):
         try:
-            otpObj = self.db.find_one_by_fieldname("email", email, self.collection_name)
+            otpObj = self.db.find_one({"email":email, "exp_Time":{'$gte': datetime.now()}}, self.collection_name)
+            print(otpObj)
             if otpObj:
                 return otpObj.get('OTP')
             else:

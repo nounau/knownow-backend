@@ -1,3 +1,4 @@
+from datetime import datetime 
 from app.factory.validation import Validator
 from app.factory.database import Database
 from hmac import compare_digest
@@ -135,7 +136,12 @@ class Users(object):
         return self.map_document_to_instance(self.db.find_one_by_fieldname("email", email, self.collection_name))
 
     def updateOtpVerifiedFlag(self, email_of_OTP, otpVerified):
-        return self.db.update_otpVerified(email_of_OTP, otpVerified, self.collection_name)
+        criteria = {"email": email_of_OTP}
+        element = {
+            "otpVerified": otpVerified,
+            "updated": datetime.now()  # Update the 'updated' field
+        }
+        return self.db.update_by_criteria(criteria, element, self.collection_name)
 
     def update(self, id, user):
         self.validator.validate(user, self.fields, self.update_required_fields, self.update_optional_fields)

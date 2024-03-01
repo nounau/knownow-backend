@@ -35,11 +35,23 @@ class Database(object):
             return [model_class().map_document_to_instance(doc) for doc in found]
 
         return found
+    
+    def find_one(self, criteria, collection_name, projection=None, sort=None, limit=0, cursor=False, model_class=None):
+        found = self.db[collection_name].find_one(filter=criteria, projection=projection, limit=limit, sort=sort)
+        if found is None:
+            return False
+        if "_id" in found:
+            found["_id"] = str(found["_id"])
+
+        if model_class:
+            return model_class().map_document_to_instance(found)
+
+        return found
 
     def find_by_id(self, id, collection_name, model_class=None):
         found = self.db[collection_name].find_one({"_id": ObjectId(id)})
         if found is None:
-            return not found
+            return False
         if "_id" in found:
             found["_id"] = str(found["_id"])
 
@@ -50,8 +62,9 @@ class Database(object):
 
     def find_one_by_fieldname(self, fieldname, fieldvalue, collection_name, model_class=None):
         found = self.db[collection_name].find_one({fieldname: fieldvalue})
+        print(found)
         if found is None:
-            return not found
+            return False
         if "_id" in found:
             found["_id"] = str(found["_id"])
 
@@ -63,7 +76,7 @@ class Database(object):
     def find_many_by_fieldname(self, fieldname, fieldvalue, collection_name, model_class=None):
         found = self.db[collection_name].find({fieldname: fieldvalue})
         if found is None:
-            return not found
+            return False
 
         if model_class:
             return [model_class().map_document_to_instance(doc) for doc in found]
@@ -81,14 +94,7 @@ class Database(object):
             return self.find_by_id(str(id), collection_name, model_class)
         
     # for OTP, includes upsert
-    def update_by_email(self, email, OTP, exp_Time, status, collection_name):
-        criteria = {"email": email}
-        element = {
-            "OTP": OTP,
-            "exp_Time": exp_Time,
-            "status": status,
-            "updated": datetime.now()  # Update the 'updated' field
-        }
+    def upsert_by_criteria(self, criteria, element, collection_name):
         set_obj = {"$set": element}
 
         # Try to update the document, if not found, insert a new one (upsert)
@@ -99,29 +105,7 @@ class Database(object):
         else:
             return False
 
-    # for OTP, only update
-    def update_status_by_email(self, email, status, collection_name):
-        criteria = {"email": email}
-        element = {
-            "status": status,
-            "updated": datetime.now()  # Update the 'updated' field
-        }
-        set_obj = {"$set": element}
-
-        # Try to update the document
-        updated = self.db[collection_name].update_one(criteria, set_obj)
-
-        if updated.matched_count == 1:
-            return True
-        else:
-            return False
-
-    def update_otpVerified(self, email, otpVerified, collection_name):
-        criteria = {"email": email}
-        element = {
-            "otpVerified": otpVerified,
-            "updated": datetime.now()  # Update the 'updated' field
-        }
+    def update_by_criteria(self, criteria, element, collection_name):
         set_obj = {"$set": element}
 
         # Try to update the document

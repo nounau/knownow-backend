@@ -36,7 +36,7 @@ def postUser():
     # if(otp.get_otp(_email)):
     #     otp.updateStatus(_email, "INACTIVE")
     # else:
-    Otp().save_otp(_email, OTP, exp_Time, "ACTIVE")
+    Otp().save_otp(_email, OTP)
     
     return jsonify({'ok': True, 'message': 'User created successfully!', 'response': id}), 200
     # return jsonify({'ok': False, 'message': 'Something went wrong', 'response': ''}), 400

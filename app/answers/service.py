@@ -10,6 +10,9 @@ class AnswerService:
 
     def getAnswerById(self, answer_id):
         return self.answers.find_by_id(answer_id)
+    
+    def getAllAnswersForCurrentUser(self, current_user):
+        return self.answers.getAllAnswersForCurrentUser(current_user)
 
     def postAnswer(self, data):
         # Add validation logic here if needed

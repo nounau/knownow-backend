@@ -1,9 +1,11 @@
 # services.py
 from app.models import questions
+from app.models import savedBy
 
 
 class QuestionService:
     questions = questions.Questions()
+    savedByModel = savedBy.SavedBy()
 
     def get_all(self):
         return self.questions.find({})
@@ -21,3 +23,6 @@ class QuestionService:
 
     def delete(self, question_id):
         return self.questions.delete(question_id)
+    
+    def savedBy(self, current_user, questionIds):
+        return self.savedByModel.savedBy(current_user, questionIds)

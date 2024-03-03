@@ -24,19 +24,22 @@ class Answers(object):
         self.create_optional_fields = []
 
         # Fields required for UPDATE
-        self.update_required_fields = ["title"]
+        self.update_required_fields = ["answer"]
 
         # Fields optional for UPDATE
         self.update_optional_fields = []
 
     def create(self, answer):
         # Validator will throw error if invalid
-        self.validator.validate(answer, self.fields, self.create_required_fields, self.create_optional_fields)
+        # self.validator.validate(answer, self.fields, self.create_required_fields, self.create_optional_fields)
         res = self.db.insert(answer, self.collection_name)
         return res
 
     def find(self, answer):  
         return self.db.find(answer, self.collection_name)
+    
+    def getAllAnswersForCurrentUser(self, current_user):
+        return self.db.find_many_by_fieldname("userId", current_user, self.collection_name)
 
     def findByAggregate(self, answer): 
         # Add logic to populate reference fields

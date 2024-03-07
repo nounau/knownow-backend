@@ -8,11 +8,6 @@ class Database(object):
     def __init__(self):
         self.client = MongoClient(Config.MONGO_DB_URL)  # configure db url
         self.db = self.client[Config.MONGO_DB_NAME]  # configure db name
-        try:
-            self.client.admin.command('ping')
-            print("Pinged your deployment. You successfully connected to MongoDB!")
-        except Exception as e:
-            print(e)
 
     def insert(self, element, collection_name, model_class=None):
         element["created"] = datetime.now()

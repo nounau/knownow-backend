@@ -17,20 +17,20 @@ class mailUtility:
             # mail_dict = dict(mail_obj)
 
             # Set up 
-            mail_server = smtplib.SMTP('smtp.gmail.com', 587)
+            mail_server = smtplib.SMTP(os.getenv('SMTP_HOST'), os.getenv('SMTP_PORT'))
             mail_server.starttls()
 
             # Log in to the email server
             mail_server.login(os.getenv('SMTP_EMAILID'), os.getenv('SMTP_PASSWORD'))
 
             message = MIMEMultipart()
-            message['From'] = 'gitlatnip91@gmail.com'
+            message['From'] = os.getenv('SMTP_EMAILID')
             message['To'] = email
             message['Subject'] = mail_obj['subject']
             message.attach(MIMEText(mail_obj['description'], 'html'))
             print("M A I L : ",message)
 
-            mail_server.sendmail('gitlatnip91@gmail.com', email, message.as_string())
+            mail_server.sendmail(os.getenv('SMTP_EMAILID'), email, message.as_string())
 
             mail_server.quit()
 

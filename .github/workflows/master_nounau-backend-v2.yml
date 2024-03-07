@@ -2,7 +2,7 @@
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 # More info on Python, GitHub Actions, and Azure App Service: https://aka.ms/python-webapps-actions
 
-name: Build and deploy Python app to Azure Web App - nounau-backend-v2
+name: Build and deploy Python app to Azure Web App - nounau-backend
 
 on:
   push:
@@ -65,14 +65,14 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v1
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_E4027323D11F4DE689958E9ADDA6099C }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_AA3FCA615BBC41CFB94027F7E46CB835 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_E0495457694E40F793CD94EE82ED7AB7 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_5E8B6E3554A741FBAB29D51B9CCA59CA }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_E5D9F43E35B14A72A01DFFB4303D0432 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_29213E8F901D423AADE63A78AB704C27 }}
 
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2
         id: deploy-to-webapp
         with:
-          app-name: 'nounau-backend-v2'
+          app-name: 'nounau-backend'
           slot-name: 'Production'
           

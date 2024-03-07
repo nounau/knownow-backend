@@ -1,3 +1,5 @@
+# Inside app/__init__.py
+
 from flask import Flask
 from flask_jwt_extended import JWTManager
 from app.utils.jwt_helper import jwt
@@ -28,8 +30,6 @@ def create_app(config_class=Config):
 
     from app.mailTemplate import bp as mailTemplate_bp
     app.register_blueprint(mailTemplate_bp)
-
-
 
     jwt.init_app(app)
 

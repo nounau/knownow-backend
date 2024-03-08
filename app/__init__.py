@@ -5,9 +5,8 @@ from flask_jwt_extended import JWTManager
 from app.utils.jwt_helper import jwt
 from config import Config
 
-app = Flask(__name__)
-
 def create_app(config_class=Config):
+    app = Flask(__name__)
     app.config.from_object(config_class)
 
     app.config["JWT_SECRET_KEY"] = "super-secret"  # Change this!

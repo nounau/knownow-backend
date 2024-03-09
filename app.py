@@ -6,7 +6,6 @@ from config import Config
 
 
 app = Flask(__name__)
-load_dotenv('.flaskenv') #the path to your .env file (or any other file of environment variables you want to load)
 app.config.from_object(Config)
 
 app.config["JWT_SECRET_KEY"] = "super-secret"  # Change this!

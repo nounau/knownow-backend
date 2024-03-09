@@ -4,8 +4,9 @@ from src.models import savedBy
 
 
 class QuestionService:
-    questions = questions.Questions()
-    savedByModel = savedBy.SavedBy()
+    def __init__(self):
+        self.questions = questions.Questions()
+        self.savedByModel = savedBy.SavedBy()
 
     def get_all(self):
         return self.questions.find({})

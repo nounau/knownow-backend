@@ -5,6 +5,7 @@ from src.models import savedBy
 
 class QuestionService:
     def __init__(self):
+        print("getting question service")
         self.questions = questions.Questions()
         self.savedByModel = savedBy.SavedBy()
 

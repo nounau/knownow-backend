@@ -6,6 +6,7 @@ from config import Config
 
 class Database(object):
     def __init__(self):
+        print(f"connecting to mongo URL {Config.MONGO_DB_URL} and DB name {Config.MONGO_DB_NAME}")
         self.client = MongoClient(Config.MONGO_DB_URL)  # configure db url
         self.db = self.client[Config.MONGO_DB_NAME]  # configure db name
 

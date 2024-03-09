@@ -6,6 +6,7 @@ from config import Config
 
 
 app = Flask(__name__)
+load_dotenv('.flaskenv') #the path to your .env file (or any other file of environment variables you want to load)
 app.config.from_object(Config)
 
 app.config["JWT_SECRET_KEY"] = "super-secret"  # Change this!
@@ -31,7 +32,6 @@ from src.mailTemplate import bp as mailTemplate_bp
 app.register_blueprint(mailTemplate_bp)
 
 jwt.init_app(app)
-load_dotenv('.flaskenv') #the path to your .env file (or any other file of environment variables you want to load)
 
 if __name__ == "__main__":
     app.run()
